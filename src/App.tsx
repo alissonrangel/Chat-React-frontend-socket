@@ -1,13 +1,16 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, BrowserRouter, Routes } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      ...
-    </div>
-  );
-}
+import Join from './components/Join';
+import Chat from './components/Chat';
+
+const App = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Join />} />
+      <Route path="/chat" element={<Chat location={window.location} />} />
+    </Routes>
+  </BrowserRouter>
+);
 
 export default App;

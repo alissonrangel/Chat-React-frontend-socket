@@ -1,3 +1,6 @@
+## Repository Chat with socket.io ReactJs frontend
+
+## commands
 - npx create-react-app client --template typescript
 - npm install eslint --save-dev
 - npm init @eslint/config
