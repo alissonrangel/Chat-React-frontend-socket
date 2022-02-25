@@ -1,6 +1,7 @@
 import React, {
   MouseEvent, KeyboardEvent, useEffect, useState,
 } from 'react';
+import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line import/no-unresolved
 import queryString from 'query-string';
 import { io } from 'socket.io-client';
@@ -39,6 +40,8 @@ type Props2 = {
 }
 
 const Chat = ({ location }: Props) => {
+  const navigate = useNavigate();
+
   const [name2, setName2] = useState('');
   const [room2, setRoom2] = useState('');
   const [err, setErr] = useState(false);
@@ -55,17 +58,24 @@ const Chat = ({ location }: Props) => {
     setRoom2(room);
     setName2(name);
 
-    socket.emit('join', { name, room }, (error: any) => {
-      if (error) {
-        setErr(true);
-        setErrMsg(error.error);
-        setTimeout(() => {
-          setErr(false);
-          setErrMsg('');
-        }, 4000);
-      }
-    });
+    // socket.emit('join', { name, room }, (error: any) => {
+    //   if (error) {
+    //     setErr(true);
+    //     setErrMsg(error.error);
+    //     setTimeout(() => {
+    //       setErr(false);
+    //       setErrMsg('');
+    //     }, 4000);
+    //   }
+    // });
 
+    return () => {
+      // socket.emit('disconnect');
+      socket.off();
+    };
+  }, [ENDPOINT, location.search]);
+
+  useEffect(() => {
     socket.on('connect_error', () => {
       let msgs2: Message[] = messages;
       const msg = {
@@ -77,15 +87,18 @@ const Chat = ({ location }: Props) => {
     });
 
     socket.on('connect', () => {
-      // eslintconst { name, room } = queryString.parse(location.search) as Sala;
+      const { name, room } = queryString.parse(location.search) as Sala;
       if (name !== '' && room !== '') {
         socket.emit('join', { name, room }, (error: any) => {
           if (error) {
             setErr(true);
             setErrMsg(error.error);
+            // eslint-disable-next-line no-console
+            console.log(error.error);
             setTimeout(() => {
               setErr(false);
               setErrMsg('');
+              navigate('/');
             }, 4000);
           }
         });
@@ -102,26 +115,14 @@ const Chat = ({ location }: Props) => {
       setUserList([]);
     });
 
-    return () => {
-      socket.emit('disconnect');
-      socket.off();
-    };
-  }, [ENDPOINT, location.search]);
-
-  useEffect(() => {
-    let msgs = [];
     socket.on('message', (message0: Message) => {
-      msgs = [...messages, message0];
-      setMessages(msgs);
+      setMessages((messages0) => [...messages0, message0]);
     });
 
     socket.on('roomData', ({ users }: Props2) => {
-      // eslint-disable-next-line no-console
-      console.log('USERs, ', users);
-
       setUserList(users);
     });
-  }, [messages]);
+  }, []);
 
   const sendMessage = (event: MouseEvent<HTMLInputElement> | KeyboardEvent) => {
     event.preventDefault();
