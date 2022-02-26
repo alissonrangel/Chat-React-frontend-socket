@@ -133,29 +133,33 @@ const Chat = ({ location }: Props) => {
 
   return (
     <div className="outerContainer">
-      <div className="container">
-        <InfoBar room={room2} />
-        <Messages messages={messages} name={name2} />
-        <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-      </div>
-      <div className="userlist">
-        { !err
-          && (
-          <h3>
-            User List - Room:
-            {' '}
-            {room2}
-          </h3>
-          )}
-        { err
-          && (
-            <h3>{errMsg}</h3>
-          )}
-        {userList.length > 0
+      { !err
+        && (
+        <>
+          <div className="container">
+            <InfoBar room={room2} />
+            <Messages messages={messages} name={name2} />
+            <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+          </div>
+          <div className="userlist">
+            <h3>
+              User List - Room:
+              {' '}
+              {room2}
+            </h3>
+            {userList.length > 0
       && userList.map((item) => (
         <p key={item.id}>{item.name}</p>
       ))}
-      </div>
+          </div>
+        </>
+        )}
+      { err
+      && (
+        <div className="modal">
+          <h3>{errMsg}</h3>
+        </div>
+      )}
     </div>
   );
 };

@@ -40,6 +40,21 @@
   width: 35%;
 }
 
+.modal{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 100px;
+  border: 1px solid #f00;
+  box-shadow: 3px 3px 3px #f00;
+  background-color: #fff;
+}
+
+.modal h3{
+  color: red;
+}
+
 @media (min-width: 320px) and (max-width: 480px) {
   .outerContainer {
     height: 100%;
